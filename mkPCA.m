@@ -1,5 +1,5 @@
 function [coeff, score, roots, residuals, sse, pctExplained, basis] = ...
-         mkPCA(data)
+         mkPCA(data, labels)
 
 rng(777)
 [coeff,score,roots] = pca(data);
@@ -23,8 +23,16 @@ X3 = [data(:,3) Xfit1(:,3) nan*ones(n,1)];
 hold on
 plot3(X1',X2',X3','b-', data(:,1),data(:,2),data(:,3),'bo');
 hold off
-%maxlim = max(abs(data(:)))*1.1;
-% axis([-maxlim maxlim -maxlim maxlim -maxlim maxlim]);
+maxlim = max(abs(data(:)))*1.1;
+axis([-maxlim maxlim -maxlim maxlim -maxlim maxlim]);
 axis square
 view(-9,12);
 grid on
+figure()
+pareto(pctExplained*100)
+xlabel('Principal Component')
+ylabel('Variance Explained (%)')
+figure()
+biplot(coeff(:,1:3),'scores',score(:,1:3));
+axis([-.26 0.8 -.71 .71 -.71 .81]);
+view([30 40]);

@@ -1,4 +1,4 @@
-function [fsel, opt_features, feature_labels, opt_labels, optcp, defcp] = FSel(stat, data, labels)
+function [fsel, opt_features, feature_labels, opt_labels, optcp, defcp] = FSel(stat, data, labels,lim)
 
 fsel2 = data; % data(:,:,unique(mod(find((stat>0.69)),16)));
 % fsel1 = permute(fsel2,[1 3 2]);
@@ -12,7 +12,7 @@ feature_labels = repmat(labels',(size(fsel,1)/size(data,1)),1);
 % opt_features1 = permute(opt_features2,[1 3 2]);
 % opt_features = reshape(opt_features1,[],size(opt_features2,2),1);
 
-opt_features = data(:,stat>.42);
+opt_features = data(:,stat>lim);
 % opt_features = reshape(opt_features,[],1);
 
 opt_labels = repmat(labels',(size(opt_features,1)/size(data,1)),1);
