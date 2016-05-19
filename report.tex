@@ -1,0 +1,150 @@
+\documentclass{article} % For LaTeX2e
+% We will use NIPS submission format
+\usepackage{nips13submit_e,times}
+% for hyperlinks
+\usepackage{hyperref}
+\usepackage{url}
+% For figures
+\usepackage{graphicx} 
+\usepackage{subfigure} 
+% math packages
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsopn}
+\usepackage{ifthen}
+\usepackage{placeins}
+
+\usepackage[]{mcode}
+
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+
+\title{Brain Machine Interaction \\ Feedback Modality for motor imagery practice}
+
+\author{
+Loic Jeanningros\\
+\\
+EPFL \\
+}
+
+\nipsfinalcopy 
+
+\begin{document}
+
+\maketitle
+\section{Introduction}
+Tools have always been defined as a prolongation of the body, but Brain Machine Interfaces (BCI) is a growing interest based on recording central nervous system signals in order to control tools an other way. A wide range of studies have shown the possibility to derive informations from subjects' brainwaves analyses that enables to interact with some specificaly designed electronic devices. Recent applications focus mainly on unhealthy users, from motor control impairments to cerebral illness. 
+
+Most BCI systems use electoencephalogram (EEG) signals measure from the scalp electrodes due to its non-invasive nature. This recording technique is well apropriated for stroked people who lost motor control ability since the brain is undammaged (no need for neurosurgery), but motor control commands are not transmissible to the body. Motor imagery has been largely approved (ref) as a discriminable signal from EEG recordings, however controlling device through a BCI appears laborious to learn (ref). Since feedbacks are a principal component of learning processes, it seems important to wonder what kind of feedback is efficient when performing motor imagery. Most of the studies have been using simple visual feedbacks to train an offline classifier and then be able to control several online commands through a BCI. The present study consider sensorimotor feedbacks as a great potential source of feedback. Then the goals are to understand the impact of feedbacks on modulation of brain oscillations, to extract meaningful features and design a classifier discriminating motor imagery from resting tasks and to evaluate the impact of the feedback modality on the BCI performance.
+
+
+
+\section{Protocol}
+
+Two healthy subjects have been performing 14 sessions of 30 trials. They were seated in an armless chair and looked at a computer screen placed approximately one meter in front at eye level during EEG recordings. They were asked to keep their arm and hands relaxed and to avoid any kind of movements (eye, tith and body) during trials.  A single trial corresponds to a visual information indicating the requested task. A green up-arrow indicates to perform motor imagery (MI) and a red down-arrow means to stay at rest. Since the experiment is offline the feedback is not affected by the subject. The two different task are randomly ordered so that the subject performs 15 motor imagery tasks and 15 resting tasks.
+
+Six of those sessions have been done with visual feedbacks, a colored bar was going up or down during 5 seconds depending on the task to perform.  
+Six other sessions have been performed with sensory motor feedbacks : Fonctional Electrical Stimulation (FES) is applied on the subject arm, three patches are sticked, two stimulating electrodes on the forearm and a ground electrode is placed on the biceps and is conected to the ground EEG electrode in order to cancel the noise from FES on EEG. During resting tasks, no stimulation is applied. During motor imagery tasks, a small stimulation is active during the 5 sec duration of the trial, and a greater stimulation is shortly active at the end of the trial leading to an artificial hand grasping.
+Two additional sessions have been performed with FES where the subject was supposed to stay at rest every trials, this is done to make sure that FES doesn't affect EEG recordings.
+
+The EEG features are composed of 16 channels, each one is a 512 Hz signal at a specific scalp position. \textit{Cz}-electrode is centered, ears electrodes are used as reference and \textit{AFz} electrode as the ground. Before each session, the ratio signal over noise is verified. A gel enables to ensure a good connectivity between every electrodes and the scalp (or the ears).
+The FES is a bipolar current of few milliAmpers stimulating at 30 Hz during motor imagery trials
+
+
+\section{Preprocessing}
+
+The original signal has already been re-referenced due to ear electrodes. The first step is to save only periods that correspond to a trial. With the help of the header, one can extract 30 5-seconds trials from each experiment session. The trials that show at least one \textit{NaN} are not usable and have been removed. Each trial has a corresponding label attesting which task was performed by the subject.
+
+\subsection{methods}
+
+In general, it is a good idea to substrackt the mean of the signal before applying any other method. The function \textit{detrend()} from \textbf{Matlab} is appropriate to this task. Depending on the selected option, it can remove the mean value of a vector, but also a linear trend. We choose that second option for each channel of each trial. As it can be visualized in Figure \ref{Off_detrend}, that kind of spatial filtering can be very helpful.
+
+It is also advised to band pass the signal within frequencies of interest before applying a spacial filter, then high-frenquency components are removed and the resulting signal is already smoother. xxxDO WE DO IT ?xxx
+
+%\begin{figure}
+%\begin{center}
+%\includegraphics[scale=0.35]{Off1.eps}
+%\caption{Signal of the 16 channels from a single trial}
+%\label{Off1}
+%\end{center}
+%\end{figure}
+
+\begin{figure}
+\begin{center}
+\subfigure[Before removing linear trend]{\includegraphics[scale=0.33]{Off_detrend1.eps}}
+\quad
+\subfigure[After removing linear trend]{\includegraphics[scale=0.33]{Off_detrend2.eps}}
+\end{center}
+\caption{Effect of the \textit{detrend()} function}
+\label{Off_detrend}
+\end{figure}
+
+Spatial filtering is essential when working on EEG signal. Indeed recorded signal is very noisy and its contamination can come from many different sources : a simple eye blink, sound in the room, FES itself and every electronic device are potential source of contamination. Spatial filtering enables to remove from the signal what is common across channels.
+
+The simplest method and the most significant is called Common Average Reference (CAR). The average of all channels at a time is removed from each channel, it enables to remove similarities over all. \begin{equation}
+u_i^{CAR} = u_i - \frac{1}{n} \sum_{j=1}^n u_j
+\end{equation}
+where $u_i$ is the potential of channel $i$
+
+On other way to remove similarities across channels is to use a Laplacian. Mathematically, the Laplacian operator measures the spatial second derivative, it highlights regions of rapid intensity change and is therefore very usefull for edge detection. In the case of  EEG signal processing, it reduces similarities across a region of the space and underlines frontiers. The laplacian can be more or less large depending on the structure and the number of electrodes composing the map. \begin{equation}
+u_i^{LAP} = u_i- \sum_{j \in S_i} h_{ij} u_j
+\end{equation}
+where $S_i$ is the defined neighbooring of channel $i$ and $h_{ij}$ the distance between electrodes $i$ and $j$ normed over all the sum of distances. The term small laplacian is used when the neighbooring is the 4 nearest neighboor and large laplacian when it takes the 4 second-neighboors.
+
+xxx PRE PROCESSING xxx
+FIR band pass filtering
+Notch filter, remove power line interference in spectrum around 50 Hz
+
+xxx REMOVING ARTIFACTS xxx
+Detect trials with unusual variance ??
+
+\section{results}
+
+\section{Power spectral density}
+
+\subsection{methods}
+The nature of the EEG signal supports to work in the frequency domain. Indeed, what is recorded represents large population of neurons that can lead to synchronization or desynchronization measurable by EEG recordings. That kind of behavior is easily identifiable by analysing changes in spectral density since (de)synchronization appears as a change of density in a specific frequency band. The method roughly consists to apply a Fourier transform on a time window (epoch) of consistent length with the revelant frequency domain (5-60 Hz). By overlaping windows, it enables to analyse spectrum density of each channel at discrete times. The \textbf{Matlab} function \textit{pwelch()} has been use in that purpose.
+
+ICA
+PCA
+
+\subsection{results}
+
+\section{Feature extraction}
+
+\subsection{methods}
+\subsection{results}
+
+\section{Feature selection}
+
+\subsection{methods}
+\subsection{results}
+
+\section{Classifier}
+
+\subsection{methods}
+\subsection{results}
+
+
+
+%\begin{figure}
+%\begin{center}
+%\subfigure[]{\includegraphics[scale=0.45]{__.eps}\label{__}}
+%\quad
+%\subfigure[]{\includegraphics[scale=0.45]{__.eps}\label{__}}
+%\end{center}
+%\caption{__}
+%\label{__}
+%\end{figure}
+%
+%\begin{figure}
+%\begin{center}
+%\includegraphics[scale=0.6]{__.eps}
+%\caption{__}
+%\label{__}
+%\end{center}
+%\end{figure}
+
+
+
+
+\end{document}
