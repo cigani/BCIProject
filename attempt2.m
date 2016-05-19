@@ -8,7 +8,8 @@ s3VL = labels.s3V;
 s3F = trials.s3F;
 s3FL = labels.s3F;
 
-pleta = 1:24;
+pleta = 1:25; % Feature Extraction Frequencies 
+leta = 0.5:1:45; % PSD Frequencies 
 %% Laplacian
 
 fork.s3V = zeros([size(s3V,2) size(s3V,3) size(s3V,1)]);
@@ -32,55 +33,56 @@ lbl.s3F = s3FL';
 lbl.s3F = lbl.s3F(~isnan(fork.s3F(:,2)),:,:)';
 tr.s3F = fork.s3F(~isnan(fork.s3F(:,2)),:,:);
 %% PSD
-leta = 0.5:1:28;
-
 psd_data.s3V = ps(tr.s3V, [], leta, fs);
 lpsd.s3V=log(psd_data.s3V);
 
 psd_data.s3F = ps(tr.s3F, [], leta, fs);
 lpsd.s3F=log(psd_data.s3F);
 %% rsq
-[rs.s3V] = rsq(lpsd.s3V(:,1:24,:), lbl.s3V);
-imagesc(pleta, electrodes, rs.s3V , 'CDataMapping', 'scaled')
+[rs.s3V] = rsq(lpsd.s3V(:,:,:), lbl.s3V);
+imagesc(leta, electrodes, rs.s3V , 'CDataMapping', 'scaled')
 set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('Visual - R-Squared');
 figure
-[rs.s3F] = rsq(lpsd.s3F(:,1:24,:), lbl.s3F);
-imagesc(pleta, electrodes, rs.s3F , 'CDataMapping', 'scaled')
+[rs.s3F] = rsq(lpsd.s3F(:,:,:), lbl.s3F);
+imagesc(leta, electrodes, rs.s3F , 'CDataMapping', 'scaled')
 set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('FES - R-Squared');
 %% Fisher Score
 
-FSc.s3V = fis(lpsd.s3V(:,1:24,:), lbl.s3V);
+FSc.s3V = fis(lpsd.s3V(:,:,:), lbl.s3V);
 figure;
-imagesc(pleta, electrodes, FSc.s3V , 'CDataMapping', 'scaled', 'Tag', 'Fisher Score')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, FSc.s3V , 'CDataMapping', 'scaled', 'Tag', 'Fisher Score')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('Visual - Fisher Score');
 
-FSc.s3F = fis(lpsd.s3F(:,1:24,:), lbl.s3F);
+FSc.s3F = fis(lpsd.s3F(:,:,:), lbl.s3F);
 figure;
-imagesc(pleta, electrodes, FSc.s3F , 'CDataMapping', 'scaled', 'Tag', 'Fisher Score')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, FSc.s3F , 'CDataMapping', 'scaled', 'Tag', 'Fisher Score')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('FES - Fisher Score');
 
 %% Independant Feature Modeling
+ kl.s3V = [];
+ kl.s3F = [];
 for k = 1:size(lpsd.s3V,3)
-    kl.s3V(k,:) = IndFeat(lpsd.s3V(:,1:24,k), lbl.s3V);
+    kl.s3V(k,:) = IndFeat(lpsd.s3V(:,:,k), lbl.s3V);
+    
 end
-imagesc(pleta, electrodes, kl.s3V , 'CDataMapping', 'scaled', 'Tag', 'Independant Feature Modeling')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, kl.s3V , 'CDataMapping', 'scaled', 'Tag', 'Independant Feature Modeling')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('Visual - Independant Feature Modeling');
 figure
 for k = 1:size(lpsd.s3F,3)
-    kl.s3F(k,:) = IndFeat(lpsd.s3F(:,1:24,k), lbl.s3F);
+    kl.s3F(k,:) = IndFeat(lpsd.s3F(:,:,k), lbl.s3F);
 end
-imagesc(pleta, electrodes, kl.s3F , 'CDataMapping', 'scaled', 'Tag', 'Independant Feature Modeling')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, kl.s3F , 'CDataMapping', 'scaled', 'Tag', 'Independant Feature Modeling')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('FES - Independant Feature Modeling');
 %% PCA [Needs work]
@@ -90,10 +92,10 @@ title('FES - Independant Feature Modeling');
 % [coeff.s3F, score.s3F, roots.s3F, residuals.s3F, sse.s3F, pctExplained.s3F, basis.s3F] = ...
 %    mkPCA(lpsd.s3F(:,:,9))
 %% Feature Extraction
-lim.s3V = 0.62;
+lim.s3V = 0.60;
 lim.s3F = 0.190;
-[~, optimal_feature.s3V, ~, optimal_labels.s3V, optcp.s3V, ~] = FSel(FSc.s3V, lpsd.s3V, lbl.s3V, lim.s3V);
-[~, optimal_feature.s3F, ~, optimal_labels.s3F, optcp.s3F, ~] = FSel(FSc.s3F, lpsd.s3F, lbl.s3F, lim.s3F);
+[~, optimal_feature.s3V, ~, optimal_labels.s3V, optcp.s3V, ~] = FSel(FSc.s3V(:,pleta), lpsd.s3V(:,pleta,:), lbl.s3V, lim.s3V);
+[~, optimal_feature.s3F, ~, optimal_labels.s3F, optcp.s3F, ~] = FSel(FSc.s3F(:,pleta), lpsd.s3F(:,pleta,:), lbl.s3F, lim.s3F);
 
 %% discrim
 rng(777)
@@ -141,38 +143,38 @@ end
 
 figure()
 subplot(3,2,1)
-imagesc(pleta, electrodes, rs.s3V , 'CDataMapping', 'scaled')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, rs.s3V , 'CDataMapping', 'scaled')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('Visual - R-Squared');
 subplot(3,2,2)
-imagesc(pleta, electrodes, rs.s3F , 'CDataMapping', 'scaled')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, rs.s3F , 'CDataMapping', 'scaled')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('FES - R-Squared');
 subplot(3,2,3)
-imagesc(pleta, electrodes, FSc.s3V , 'CDataMapping', 'scaled', 'Tag', 'Fisher Score')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, FSc.s3V , 'CDataMapping', 'scaled', 'Tag', 'Fisher Score')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('Visual - Fisher Score');
 subplot(3,2,4)
-imagesc(pleta, electrodes, FSc.s3F , 'CDataMapping', 'scaled', 'Tag', 'Fisher Score')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, FSc.s3F , 'CDataMapping', 'scaled', 'Tag', 'Fisher Score')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('FES - Fisher Score');
 subplot(3,2,5)
-imagesc(pleta, electrodes, kl.s3V , 'CDataMapping', 'scaled', 'Tag', 'Independant Feature Modeling')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, kl.s3V , 'CDataMapping', 'scaled', 'Tag', 'Independant Feature Modeling')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('Visual - Independant Feature Modeling');
 subplot(3,2,6)
-imagesc(pleta, electrodes, kl.s3F, 'CDataMapping', 'scaled', 'Tag', 'Independant Feature Modeling')
-set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:30);
+imagesc(leta, electrodes, kl.s3F, 'CDataMapping', 'scaled', 'Tag', 'Independant Feature Modeling')
+set(gca,'YDir','normal','YTick', 1:16, 'XTick', 0:2:45);
 xlabel('Frequency (Hz)'); ylabel('Electrode');
 title('FES - Independant Feature Modeling');
 
 %% Plot Classifier 
-
+figure
 ybar = [opt_LDAx.s3V, opt_LDAx.s3F, opt_QDAx.s3V, opt_QDAx.s3F, loss.s3V, loss.s3F];
 bar(1:6, ybar)
 set(gca,'XtickLabel',{'LDA - Visual', 'LDA - FES','QDA - Visual', 'QDA - FES', 'SVM - Visual', 'SVM - FES'})
