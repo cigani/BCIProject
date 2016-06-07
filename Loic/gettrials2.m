@@ -60,13 +60,7 @@ for tr=1:length(Ind781)
     
     trials(tr,:,:) = data(start:start+dur,1:16);
     labels(tr) = header.EVENT.TYP(Ind781(tr)-1);
-    
-    if any(isnan(trials(tr,:,:))==1)
-        trials(tr,:,:) = [];
-        labels(tr) = [];
-    end 
 end
-
 
 
 % Relabel labels

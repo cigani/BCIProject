@@ -58,58 +58,122 @@ switch mode
         lap(16,6) = -1/2; lap(16,14) = -1/2;
 end
 
-
 for i = 1:N_tr
     trial(:,:) = trials(i,:,:);
-    [lap1, trial] = manageNoisyChannels(lap, trial);
-    trials(i,:,:) = trial(:,:)*lap1';
+    trials(i,:,:) = trial(:,:)*lap';
 end
 
 end
 
+%% Several trials
 
-function [lap, trial] = manageNoisyChannels(lap, trial )
-% Detect noise in channels
+% function [lap, trials] = manageNoisyChannels(lap, trials )
+% % Detect noise in channels
+% 
+% noisyChannels = [];
+% threshold = 6; % Maximum variance
+% %th = 2;
+% % Compute the variance of each channel over all trials
+% for i = 1:size(trials,3)
+%     var(i) = std2(trials(:,:,i));
+% end
+% 
+% % Average of variances
+% %muVar = mean(var)
+% noisyVar = [];
+% 
+% % Save channels that are unexpectly noisy (if the channel variance is
+% % greater than a defined threshold
+% for i = 1:length(var)
+%     if var(i) > threshold %&& var(i) < th
+%         noisyChannels = [noisyChannels i];
+%         noisyVar = [noisyVar var(i)];
+%     end
+% end
+% 
+% 
+% for i = 1:length(noisyChannels)
+%     fprintf('nC %i : var = %d.1 ; ', [noisyChannels(i), noisyVar(i)]);
+% end
+% if length(noisyChannels)>0
+%     fprintf('N = %i \n', length(noisyChannels));
+% end
+% 
+% % Replace Noisy channels with average of neighboors
+% for j = 1:length(noisyChannels)
+%     if noisyChannels(j) == 1
+%         trials(:,:,noisyChannels(j)) = trials(:,:,4);
+%     elseif noisyChannels(j) == 4
+%         trials(:,:,noisyChannels(j)) = (trials(:,:,1)+trials(:,:,3)+trials(:,:,5)+trials(:,:,9))/4;
+%     else
+%            idx = [noisyChannels(j)-1, noisyChannels(j)+1, noisyChannels(j)-5, noisyChannels(j)+5];
+%            idx = idx(find(idx>1 & idx <=16));
+%            trials(:,:,noisyChannels(j)) = 0;
+%            for k = 1:length(idx)
+%                trials(:,:,noisyChannels(j)) = trials(:,:,noisyChannels(j)) + trials(:,:,idx(k))/length(idx);
+%            end
+%     end
+% 
+%     % modify the laplacian
+%     lap(noisyChannels(j),:) = zeros(1,size(trials,3));
+%     lap(noisyChannels(j),noisyChannels(j)) = 1;
+% end
+% 
+% end
 
-noisyChannels = [];
-threshold = 1.5; % 150% greater than the total variance is our threshold.
+%% One trial
 
-% Compute the variance of each channel over all trials
-for i = 1:size(trial,2)
-    var(i) = std(trial(:,i));
-end
-
-% Average of variances
-muVar = mean(var);
-
-% Save channels that are unexpectly noisy (if the channel variance is
-% greater than a defined threshold
-for i = 1:length(var)
-    if var(i)/muVar > threshold
-        noisyChannels = [noisyChannels i];
-    end
-end
-
-% Replace Noisy channels with average of neighboors
-for j = 1:length(noisyChannels)
-    fprintf('%i noisy channel(s) % \n', length(noisyChannels));
-    if noisyChannels(j) == 1
-        trial(:,noisyChannels(j)) = trial(:,4);
-    elseif noisyChannels(j) == 4
-        trial(:,noisyChannels(j)) = (trial(:,1)+trial(:,3)+trial(:,5)+trial(:,9))/4;
-    else
-           idx = [noisyChannels(j)-1, noisyChannels(j)+1, noisyChannels(j)-5, noisyChannels(j)+5];
-           idx = idx(find(idx>1 & idx <=16));
-           trial(:,noisyChannels(j)) = 0;
-           for k = 1:length(idx)
-               trial(:,noisyChannels(j)) = trial(:,noisyChannels(j)) + trial(:,idx(k))/length(idx);
-           end
-    end
-    
-    % modify the laplacian
-    lap(noisyChannels(j),:) = zeros(1,size(trial,2));
-    lap(noisyChannels(j),noisyChannels(j)) = 1;
-end
-
-end
+% function [lap, trial, var] = manageNoisyChannels(lap, trial)
+% % Detect noise in channels
+% 
+% noisyChannels = [];
+% threshold = 8; % Maximum variance
+% %th = 2;
+% % Compute the variance of each channel over all trials
+% for i = 1:size(trial,2)
+%     var(i) = std(trial(:,i));
+% end
+% 
+% % Average of variances
+% %muVar = mean(var)
+% noisyVar = [];
+% 
+% % Save channels that are unexpectly noisy (if the channel variance is
+% % greater than a defined threshold
+% for i = 1:length(var)
+%     if var(i) > threshold %&& var(i) < th
+%         noisyChannels = [noisyChannels i];
+%         noisyVar = [noisyVar var(i)];
+%     end
+% end
+% 
+% 
+% for i = 1:length(noisyChannels)
+%     fprintf('nC %i : var = %d.1 ; ', [noisyChannels(i), noisyVar(i)]);
+% end
+% if length(noisyChannels)>0
+%     fprintf('N = %i \n', length(noisyChannels));
+% end
+% 
+% % Replace Noisy channels with average of neighboors
+% for j = 1:length(noisyChannels)
+%     if noisyChannels(j) == 1
+%         trial(:,noisyChannels(j)) = trial(:,4);
+%     elseif noisyChannels(j) == 4
+%         trial(:,noisyChannels(j)) = (trial(:,1)+trial(:,3)+trial(:,5)+trial(:,9))/4;
+%     else
+%            idx = [noisyChannels(j)-1, noisyChannels(j)+1, noisyChannels(j)-5, noisyChannels(j)+5];
+%            idx = idx(find(idx>1 & idx <=16));
+%            trial(:,noisyChannels(j)) = 0;
+%            for k = 1:length(idx)
+%                trial(:,noisyChannels(j)) = trial(:,noisyChannels(j)) + trial(:,idx(k))/length(idx);
+%            end
+%     end
+% 
+%     % modify the laplacian
+%     %lap(noisyChannels(j),:) = zeros(1,size(trial,2));
+%     %lap(noisyChannels(j),noisyChannels(j)) = 1;
+% end
+% 
+% end
 
