@@ -1,0 +1,92 @@
+\begin{thebibliography}{10}
+
+\bibitem{PSYP:PSYP1329}
+Ashley Craig, Yvonne Tran, Nirupama Wijesuriya, and Hung Nguyen.
+\newblock Regional brain wave activity changes associated with fatigue.
+\newblock {\em Psychophysiology}, 49(4):574--582, 2012.
+
+\bibitem{Curran2003326}
+Eleanor~A Curran and Maria~J Stokes.
+\newblock Learning to control brain activity: A review of the production and
+  control of \{EEG\} components for driving brain--computer interface (bci)
+  systems.
+\newblock {\em Brain and Cognition}, 51(3):326 -- 336, 2003.
+
+\bibitem{fisher1936use}
+Ronald~A Fisher.
+\newblock The use of multiple measurements in taxonomic problems.
+\newblock {\em Annals of eugenics}, 7(2):179--188, 1936.
+
+\bibitem{Formaggio:2010aa}
+Emanuela Formaggio, Silvia~Francesca Storti, Roberto Cerini, Antonio Fiaschi,
+  and Paolo Manganotti.
+\newblock Brain oscillatory activity during motor imagery in eeg-fmri
+  coregistration.
+\newblock {\em Magnetic Resonance Imaging}, 28(10):1403--1412, 12 2010.
+
+\bibitem{he2005laplacian}
+Xiaofei He, Deng Cai, and Partha Niyogi.
+\newblock Laplacian score for feature selection.
+\newblock In {\em Advances in neural information processing systems}, pages
+  507--514, 2005.
+
+\bibitem{1741-2552-4-2-R01}
+F~Lotte, M~Congedo, A~L{\'e}cuyer, F~Lamarche, and B~Arnaldi.
+\newblock A review of classification algorithms for eeg-based brain--computer
+  interfaces.
+\newblock {\em Journal of Neural Engineering}, 4(2):R1, 2007.
+
+\bibitem{Mitz:1991aa}
+A~R Mitz, M~Godschalk, and S~P Wise.
+\newblock Learning-dependent neuronal activity in the premotor cortex: activity
+  during the acquisition of conditional motor associations.
+\newblock {\em J Neurosci}, 11(6):1855--1872, Jun 1991.
+
+\bibitem{murphy}
+Maxwell~D Murphy, David~J Guggenmos, David~T Bundy, and Randolph~J Nudo.
+\newblock Current challenges facing the translation of brain computer
+  interfaces from preclinical trials to use in human patients.
+\newblock {\em Front Cell Neurosci}, 9:497, 2015.
+
+\bibitem{Pfurtscheller:2006aa}
+G.~Pfurtscheller, C.~Brunner, A.~Schl{\"o}gl, and F.~H. Lopes~da Silva.
+\newblock Mu rhythm (de)synchronization and eeg single-trial classification of
+  different motor imagery tasks.
+\newblock {\em NeuroImage}, 31(1):153--159, 5 2006.
+
+\bibitem{Pfurtscheller200333}
+Gert Pfurtscheller, Gernot~R M{\"u}ller, J{\"o}rg Pfurtscheller,
+  Hans~J{\"u}rgen Gerner, and R{\"u}diger Rupp.
+\newblock `thought' -- control of functional electrical stimulation to restore
+  hand grasp in a patient with tetraplegia.
+\newblock {\em Neuroscience Letters}, 351(1):33 -- 36, 2003.
+
+\bibitem{Pfurtscheller:1997aa}
+Gert Pfurtscheller and Christa Neuper.
+\newblock Motor imagery activates primary sensorimotor area in humans.
+\newblock {\em Neuroscience Letters}, 239(2--3):65--68, 12 1997.
+
+\bibitem{MI}
+Gert Pfurtscheller and Christa Neuper.
+\newblock Motor imagery and direct brain-computer communication.
+\newblock {\em Proceedings of the IEEE}, 89(7):1123--1134, 2001.
+
+\bibitem{Solodkin01112004}
+Ana Solodkin, Petr Hlustik, E.~Elinor Chen, and Steven~L. Small.
+\newblock Fine modulation in network activation during motor execution and
+  motor imagery.
+\newblock {\em Cerebral Cortex}, 14(11):1246--1255, 2004.
+
+\bibitem{clinical}
+Jonathan~R Wolpaw, Niels Birbaumer, Dennis~J McFarland, Gert Pfurtscheller, and
+  Theresa~M Vaughan.
+\newblock Brain--computer interfaces for communication and control.
+\newblock {\em Clinical Neurophysiology}, 113(6):767 -- 791, 2002.
+
+\bibitem{xu2011robot}
+Baoguo Xu, Si~Peng, Aiguo Song, Renhuan Yang, and Lizheng Pan.
+\newblock Robot-aided upper-limb rehabilitation based on motor imagery eeg.
+\newblock {\em International Journal of Advanced Robotic Systems}, 8(4):88--97,
+  2011.
+
+\end{thebibliography}

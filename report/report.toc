@@ -1,0 +1,12 @@
+\contentsline {section}{Introduction}{2}{section*.1}
+\contentsline {section}{Methods}{2}{section*.2}
+\contentsline {subsection}{Protocol}{2}{section*.3}
+\contentsline {subsection}{Preprocessing}{3}{section*.4}
+\contentsline {subsection}{Feature extraction}{4}{section*.6}
+\contentsline {subsection}{Feature selection}{4}{section*.7}
+\contentsline {subsection}{Classifier}{5}{section*.8}
+\contentsline {section}{Results}{6}{section*.9}
+\contentsline {subsection}{Subject 1}{6}{section*.10}
+\contentsline {subsection}{Subject 2}{6}{section*.17}
+\contentsline {section}{Discussion}{6}{section*.18}
+\contentsline {section}{Conclusion}{13}{section*.19}
